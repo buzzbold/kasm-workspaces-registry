@@ -1,28 +1,39 @@
-name: Build
+name: Build and Deploy
 
 on:
   push:
-    branches-ignore:
-      - 'gh-pages'
+    branches:
+      - '1.1'
+
 permissions:
   contents: write
-jobs:
-  build:
-    runs-on: ubuntu-latest
 
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Build # Have to run processing first so the list.json exists to be included in the the deploy
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
         run: |
-          npm ci --prefix processing 
-          npm ci --prefix site
+          npm install --prefix processing
+          npm install --prefix site
+
+      - name: Build Registry
+        run: |
+          chmod +x ./build_all_branches.sh
           ./build_all_branches.sh
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages
           folder: public
+          branch: gh-pages
