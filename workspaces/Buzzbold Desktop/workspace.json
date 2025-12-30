@@ -16,7 +16,7 @@
   "compatibility": [
     {
       "version": "1.18.x",
-      "image": "buzzbold/buzzbold-desktop:latest",
+      "image": "ghcr.io/buzzbold/buzzbold-desktop:latest",
       "uncompressed_size_mb": 3500,
       "available_tags": [
         "latest"
